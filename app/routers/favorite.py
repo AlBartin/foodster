@@ -1,31 +1,31 @@
-# from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
-# from sqlalchemy.orm import Session
-# from typing import List, Optional
-# from ..database import get_db
-# from .. import models, schemas, oauth2
-# from sqlalchemy import func
+from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
+from sqlalchemy.orm import Session
+from typing import List, Optional
+from ..database import get_db
+from .. import models, schemas, oauth2
+from sqlalchemy import func
 
-# router = APIRouter(
-#     prefix='/posts',
-#     tags=['Posts']
-# )
+router = APIRouter(
+    prefix='/favorites',
+    tags=['Favorites']
+)
 
-# @router.get('/', response_model=List[schemas.PostOut])
-# #@router.get('/')
-# async def get_posts(db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user), limit: int=10, skip: int= 0, search: Optional[str] = ""):
-#     #posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-#     results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+@router.get('/', response_model=List[schemas.FavoriteOut])
+#@router.get('/')
+async def get_favorites(db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user), limit: int=10, skip: int= 0, search: Optional[str] = ""):
+    #posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    results = db.query(models.Favorite(owner_id=current_user.id)).all()
     
-#     return results
+    return results
 
-# @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-# def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
-#     new_post = models.Post(owner_id=current_user.id, **post.dict())
-#     db.add(new_post)
-#     db.commit()
-#     db.refresh(new_post)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.Favorite)
+def create_favorite(favorite: schemas.FavoriteCreate, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
+    new_favorite = models.Favorite(owner_id=current_user.id, **favorite.dict())
+    db.add(new_favorite)
+    db.commit()
+    db.refresh(new_favorite)
 
-#     return new_post
+    return new_favorite
 
 # @router.get('/{id}', response_model=schemas.PostOut)
 # async def get_post(id: int, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
@@ -71,9 +71,3 @@
 #     db.commit()
 
 #     return post_query.first()
-
-# # @app.get('/sqlalchemy')
-# # def test_posts(db: Session = Depends(get_db)):
-    
-# #     posts = db.query(models.Post).all()
-# #     return {"data": posts}

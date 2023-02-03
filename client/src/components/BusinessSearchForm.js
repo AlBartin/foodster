@@ -1,46 +1,31 @@
 import { useState } from 'react'
-import api from '../api/posts.js'
-import { useRecoilState } from 'recoil'
-import { businessesState } from '../recoil/atoms'
-import { useEffect } from 'react'
-import BusinessCard from '../components/BusinessCard.js'
+import api from '../api/posts'
 
-
-
-function BusinessContainer() {
-
-    const [businesses, setBusinesses] = useRecoilState(businessesState)
+function BusinessSearchForm() {
 
     const [terms, setTerms] = useState('')
 
     const handleChange = (e) => setTerms({...terms, [e.target.name]: e.target.value})
     
-    const getBusinesses = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         try{
             const response = await api.get('businesses',
             {params: {
                 term: terms.term,
                 radius: terms.radius,
+                limit: 10,
                 location: terms.location
             },})
-            setBusinesses(response.data.businesses)
         }
         catch(error){
             console.log(error)
         }
         }
 
-    useEffect(() => {
-    
-        getBusinesses();
-    }, [])
-
-    const renderedBusinesses = businesses.map((business) => <BusinessCard key={business.id} business={business} />)
-
   return (
     <div>
-         <form onSubmit={getBusinesses}>
+        <form onSubmit={handleSubmit}>
             <label>Category</label>
             <input
                 type='text'
@@ -64,10 +49,8 @@ function BusinessContainer() {
             />
             <button>Search</button>
         </form>
-        {renderedBusinesses}
     </div>
-
   )
 }
 
-export default BusinessContainer
+export default BusinessSearchForm

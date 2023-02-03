@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useRecoilState } from 'recoil'
-import { currentUserState } from '../recoil/atoms'
+import { currentUserState, currentAuthState } from '../recoil/atoms'
 import api from '../api/posts'
 
 
@@ -14,6 +14,7 @@ function LoginForm() {
     const [loginForm, setLoginForm] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
+    const [currentAuth, setCurrentAuth] = useRecoilState(currentAuthState)
 
     // useEffect(() => {
     //     userRef.current.focus()
@@ -38,8 +39,9 @@ function LoginForm() {
             }
         })
         setCurrentUser(response.data)
-        localStorage.setItem('user', JSON.stringify(response.data))
-        navigate('/profile', { replace: true })
+        //localStorage.setItem('user', JSON.stringify(response.data))
+        setCurrentAuth(response.data.token)
+        navigate('/favorites', { replace: true })
         }
         catch (err) {
             if (!err?.response) {
