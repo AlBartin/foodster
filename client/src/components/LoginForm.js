@@ -39,8 +39,8 @@ function LoginForm() {
             }
         })
         setCurrentUser(response.data)
+        console.log(response.data)
         //localStorage.setItem('user', JSON.stringify(response.data))
-        setCurrentAuth(response.data.token)
         navigate('/favorites', { replace: true })
         }
         catch (err) {

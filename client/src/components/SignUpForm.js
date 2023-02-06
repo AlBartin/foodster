@@ -5,7 +5,7 @@ import { currentUserState } from '../recoil/atoms'
 import api from '../api/posts'
 
 function SignUpForm() {
-  
+   
     let navigate = useNavigate()
     const userRef = useRef()
     const errRef = useRef()
