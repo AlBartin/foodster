@@ -23,6 +23,7 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     user: int
+    refresh_token: str
 
 class TokenData(BaseModel):
     id: Optional[str] = None
