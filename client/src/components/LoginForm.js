@@ -39,9 +39,8 @@ function LoginForm() {
             }
         })
         setCurrentUser(response.data)
-        console.log(response.data)
-        //localStorage.setItem('user', JSON.stringify(response.data))
-        navigate('/favorites', { replace: true })
+        localStorage.setItem('user', JSON.stringify(response.data))
+        navigate('/businesses', { replace: true })
         }
         catch (err) {
             if (!err?.response) {

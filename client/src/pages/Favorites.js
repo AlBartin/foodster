@@ -6,6 +6,7 @@ import api from "../api/posts";
 
 function Favorites() {
 	const currentUser = useRecoilValue(currentUserState);
+    const [random, setRandom] = useState(null)
 	const [favorites, setFavorites] = useState([]);
 
 	console.log(currentUser);
@@ -22,19 +23,31 @@ function Favorites() {
 		}
 	};
 
-	useEffect(() => {
-		getFavorites();
-
-	}, []);
-    console.log(favorites.map((favorite) => {return favorite}))
 	const renderedFavorites = favorites.map((favorite) => 
 		 <FavoriteCard key={favorite.id} favorite={favorite} />
 	);
 
+    const handleClick = () => {
+        const randNum = Math.floor(Math.random() * favorites.length);
+        setRandom(favorites[randNum])
+    }
+
+    const handleBack = () => {
+        setRandom(null)
+    }
+
+	useEffect(() => {
+		getFavorites();
+
+	}, []);
+
+
 	return (
 		<div>
 			<h1>Favorited Businesses</h1>
-			{renderedFavorites}
+            <button onClick={handleClick}>Random Business</button>
+            <button onClick={handleBack}>Back</button>
+			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
 		</div>
 	);
 }
