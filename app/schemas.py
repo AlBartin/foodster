@@ -31,7 +31,7 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 class FavoritesBase(BaseModel):
-    business_id: str
+    business_id: Optional[str]
     name: Optional[str] = None
     image_url: Optional[str] = '../client/public/no_image_found.jpeg'
     price: Optional[str]

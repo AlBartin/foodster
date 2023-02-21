@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import RatingStars from './RatingStars'
 
 
 function FavoriteCard({ favorite }) {
@@ -24,7 +24,7 @@ function FavoriteCard({ favorite }) {
 //     }
 
 //     }
-
+  console.log(favorite)
     
     return (
     <div>
@@ -35,7 +35,7 @@ function FavoriteCard({ favorite }) {
         <h4>{favorite.location_city},{favorite.location_state}</h4>
         {favorite.rating || ratingShow ? 
         <div>
-            <h4>Rating: {favorite.rating}</h4><br/>
+            <h4>Rating: {<RatingStars favorite={favorite} />}</h4><br/>
             <h4>Comment: {favorite.comment}</h4>
             <button onClick={handleRatingChange}>Edit Rating</button>
             </div>

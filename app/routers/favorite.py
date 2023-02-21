@@ -52,7 +52,7 @@ async def delete_favorite(id: int, db: Session = Depends(get_db), current_user: 
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@router.put("/{id}", response_model=schemas.Favorite)
+@router.patch("/{id}", response_model=schemas.Favorite)
 async def update_favorite(id: int, updated_favorite: schemas.FavoriteCreate, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
 
     favorite_query = db.query(models.Favorite).filter(models.Favorite.id == id)
@@ -65,7 +65,7 @@ async def update_favorite(id: int, updated_favorite: schemas.FavoriteCreate, db:
     if favorite.owner_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Not authorized to perform requested action")
 
-    favorite_query.update(updated_favorite.dict(), synchronize_session=False)
+    favorite_query.update(updated_favorite.dict(exclude_unset=True), synchronize_session=False)
 
     db.commit()
 
