@@ -17,6 +17,10 @@ function SignUpForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (signUpForm.password != signUpForm.confirmPassword) {
+            alert("passwords don't match")
+        }
+        else {
         try{
             const response = await api.post('users',{
                 email: signUpForm.email,
@@ -39,6 +43,7 @@ function SignUpForm() {
             // errRef.current.focus()
         }
     }
+}
 
 return (    
     <div>        
@@ -53,9 +58,16 @@ return (
             />
             <label>Password</label>
             <input
-                type='text'
+                type='password'
                 name='password'
                 value={signUpForm.password}
+                onChange={handleChange}
+            />
+            <label>Confirm Password</label>
+            <input
+                type='password'
+                name='confirmPassword'
+                value={signUpForm.confirmPassword}
                 onChange={handleChange}
             />
             {/* <label>First Name</label>

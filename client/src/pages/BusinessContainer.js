@@ -25,6 +25,7 @@ function BusinessContainer() {
                 location: terms.location
             },})
             setBusinesses(response.data.businesses)
+            console.log(response.data)
         }
         catch(error){
             console.log(error)
@@ -35,6 +36,11 @@ function BusinessContainer() {
     
         getBusinesses();
     }, [])
+
+
+    const businessCategories = 'Chinese,Mexican,Italian,American, Sandwiches'
+    console.log(businessCategories.split(','))
+    
 
     const renderedBusinesses = businesses.map((business) => <BusinessCard key={business.id} business={business} />)
 

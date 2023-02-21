@@ -33,40 +33,40 @@ def create_favorite(favorite: schemas.FavoriteCreate, db: Session = Depends(get_
 #         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
 #     return post
 
-# @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-# async def delete_post(id: int, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
-#     # find the index in the array that has required ID
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_favorite(id: int, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
+    # find the index in the array that has required ID
 
-#     post_query = db.query(models.Post).filter(models.Post.id == id)
+    favorite_query = db.query(models.Favorite).filter(models.Favorite.id == id)
 
-#     post = post_query.first()
+    favorite = favorite_query.first()
 
-#     if post == None:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if favorite == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"favorite with id: {id} does not exist")
 
-#     if post.owner_id != current_user.id:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Not authorized to perform requested action")
+    if favorite.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Not authorized to perform requested action")
     
-#     post_query.delete(synchronize_session=False)
-#     db.commit()
+    favorite_query.delete(synchronize_session=False)
+    db.commit()
     
-#     return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-# @router.put("/{id}", response_model=schemas.Post)
-# async def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
+@router.put("/{id}", response_model=schemas.Favorite)
+async def update_favorite(id: int, updated_favorite: schemas.FavoriteCreate, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
 
-#     post_query = db.query(models.Post).filter(models.Post.id == id)
+    favorite_query = db.query(models.Favorite).filter(models.Favorite.id == id)
     
-#     post = post_query.first()
+    favorite = favorite_query.first()
     
-#     if post == None:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
+    if favorite == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"favorite with id: {id} does not exist")
     
-#     if post.owner_id != current_user.id:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Not authorized to perform requested action")
+    if favorite.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Not authorized to perform requested action")
 
-#     post_query.update(updated_post.dict(), synchronize_session=False)
+    favorite_query.update(updated_favorite.dict(), synchronize_session=False)
 
-#     db.commit()
+    db.commit()
 
-#     return post_query.first()
+    return favorite_query.first()
