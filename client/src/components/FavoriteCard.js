@@ -42,6 +42,7 @@ function FavoriteCard({ favorite }) {
             :
             <button onClick={handleRatingShow}>Add Rating</button>
         }
+
     </div>
   )
 }

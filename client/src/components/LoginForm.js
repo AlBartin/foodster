@@ -26,7 +26,7 @@ function LoginForm() {
 
 
     const handleChange = (e) => setLoginForm ({...loginForm, [e.target.name]: e.target.value})
-
+console.log(loginForm)
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
