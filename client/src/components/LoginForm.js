@@ -26,7 +26,7 @@ function LoginForm() {
 
 
     const handleChange = (e) => setLoginForm ({...loginForm, [e.target.name]: e.target.value})
-
+console.log(loginForm)
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
@@ -39,9 +39,8 @@ function LoginForm() {
             }
         })
         setCurrentUser(response.data)
-        console.log(response.data)
-        //localStorage.setItem('user', JSON.stringify(response.data))
-        navigate('/favorites', { replace: true })
+        localStorage.setItem('user', JSON.stringify(response.data))
+        navigate('/businesses', { replace: true })
         }
         catch (err) {
             if (!err?.response) {

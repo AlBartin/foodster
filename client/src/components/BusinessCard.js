@@ -5,7 +5,6 @@ import api from '../api/posts.js'
 function BusinessCard({ business }) {
 
     const currentUser = useRecoilValue(currentUserState)
-    console.log(currentUser)
     const handleClick = async () => {
         try {
             const response = await api.post('/favorites',

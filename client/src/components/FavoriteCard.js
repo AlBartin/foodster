@@ -1,7 +1,6 @@
 import React from 'react'
 
 function FavoriteCard({ favorite }) {
-  console.log(favorite)
   
     return (
     <div>
@@ -10,6 +9,7 @@ function FavoriteCard({ favorite }) {
         <img src={favorite.image_url} alt={favorite.name}/>
         <h4>{favorite.price}</h4>
         <h4>{favorite.location_city},{favorite.location_state}</h4>
+
     </div>
   )
 }

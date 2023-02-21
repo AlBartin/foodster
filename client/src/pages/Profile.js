@@ -11,7 +11,6 @@ function Profile() {
     const [errorMessage, setErrorMessage] = useState('')
     const currentUser = useRecoilValue(currentUserState)
 
-    console.log(currentUser)
 
     const handleChange = (e) => setPostForm ({...postForm, [e.target.name]: e.target.value})
   
