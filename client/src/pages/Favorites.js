@@ -28,9 +28,9 @@ function Favorites() {
 	};
 
 
-	const renderedFavorites = favorites.map((favorite) => 
-		 <FavoriteCard key={favorite.id} favorite={favorite} />
-	);
+	// const renderedFavorites = favorites.map((favorite) => 
+	// 	 <FavoriteCard key={favorite.id} favorite={favorite} />
+	// );
 
     const handleClick = () => {
         const randNum = Math.floor(Math.random() * favorites.length);
@@ -41,11 +41,6 @@ function Favorites() {
         setRandom(null)
     }
 
-	useEffect(() => {
-		getFavorites();
-
-	}, []);
-
 
 	const getFilteredList = () => {
 		if (!priceFilter) {
@@ -53,11 +48,12 @@ function Favorites() {
 		}
 		return favorites.filter((fav) => fav.price === priceFilter);
 	};
-	const filteredList = useMemo(getFilteredList, [priceFilter, favorites]);
 
+	const filteredList = useMemo(getFilteredList, [priceFilter, favorites]);
 	const handleChange = (e) => {
 		setPriceFilter(e.target.value);
 	};
+	// console.log(filteredList.map( (fav) => fav.price.length))
 
 	const renderedFavorites = filteredList.map((favorite) => (
 		<FavoriteCard key={favorite.id} favorite={favorite} />
@@ -80,8 +76,8 @@ function Favorites() {
 		  switch(value){
 			case 'ascending' : toType = true; toAscending = true; break;
 			case 'descending' : toType = true; toAscending = false; break;
-			// case 'high' : toType = false; toAscending = true; break;
-			// case 'low' : toType = false; toAscending = false; break;
+			case 'high' : toType = false; toAscending = true; break;
+			case 'low' : toType = false; toAscending = false; break;
 		  }
 		  let current = [...favorites]
 		  current.sort((a, b) => toType ?
@@ -96,13 +92,7 @@ function Favorites() {
 	return (
 		<div>
 			<h1>Favorite Businesses</h1>
-
-            <button onClick={handleClick}>Random Business</button>
-            <button onClick={handleBack}>Back</button>
-			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
-
-
-		<label> 
+			<label> 
 			Sort By:
 			<select onChange={(e) => handleSort(e.target.value)}>
 				<option value="none">Default</option>
@@ -121,8 +111,14 @@ function Favorites() {
 					<option value={""}>all</option>
 				</select>
 			</label>
+            <button onClick={handleClick}>Random Business</button>
+            <button onClick={handleBack}>Back</button>
+			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
 
-			{renderedFavorites}
+
+
+{/* 
+			{renderedFavorites} */}
 
 		</div>
 	);
