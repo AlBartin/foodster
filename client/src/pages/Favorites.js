@@ -44,7 +44,7 @@ function Favorites() {
 
 	return (
 		<div>
-			<h1>Favorited Businesses</h1>
+			<h1>Favorite Businesses</h1>
             <button onClick={handleClick}>Random Business</button>
             <button onClick={handleBack}>Back</button>
 			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
