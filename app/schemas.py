@@ -37,6 +37,7 @@ class FavoritesBase(BaseModel):
     price: Optional[str]
     rating: Optional[int]
     comment: Optional[str]
+    collection: Optional[str]
     location_city: Optional[str]
     location_state: Optional[str]
 

@@ -21,17 +21,22 @@ function Favorites() {
 				headers: { Authorization: `Bearer ${currentUser.access_token}` },
 				params: { id: currentUser.user },
 			});
-			setFavorites(response.data);
+			setFavorites(response.data.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)))
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	const deleteFavorite = async (id) => {
+		try {
+			await api.delete(`favorites/${id}`, { headers: { Authorization: `Bearer ${currentUser.access_token}` } })
+			setFavorites(favorites => favorites.filter( favorite => { return favorite.id !== id} ))
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
-	// const renderedFavorites = favorites.map((favorite) => 
-	// 	 <FavoriteCard key={favorite.id} favorite={favorite} />
-	// );
-
+	
     const handleClick = () => {
         const randNum = Math.floor(Math.random() * favorites.length);
         setRandom(favorites[randNum])
@@ -53,10 +58,9 @@ function Favorites() {
 	const handleChange = (e) => {
 		setPriceFilter(e.target.value);
 	};
-	// console.log(filteredList.map( (fav) => fav.price.length))
 
 	const renderedFavorites = filteredList.map((favorite) => (
-		<FavoriteCard key={favorite.id} favorite={favorite} />
+		<FavoriteCard key={favorite.id} favorite={favorite} deleteFavorite = {deleteFavorite} />
 	));
 
 	const compare = (a, b, ascendingOrder) => {
@@ -114,11 +118,6 @@ function Favorites() {
             <button onClick={handleClick}>Random Business</button>
             <button onClick={handleBack}>Back</button>
 			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
-
-
-
-{/* 
-			{renderedFavorites} */}
 
 		</div>
 	);

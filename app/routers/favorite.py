@@ -9,7 +9,7 @@ router = APIRouter(
     prefix='/favorites',
     tags=['Favorites']
 )
-
+ 
 @router.get('/')
 def get_favorites(id: int, db: Session = Depends(get_db), current_user: int= Depends(oauth2.get_current_user)):
     results = db.query(models.Favorite).filter(models.Favorite.owner_id == id).all()

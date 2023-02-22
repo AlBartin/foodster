@@ -11,9 +11,10 @@ return (
     <div>
         <label>Comment: </label>
         <textarea
+        placeholder='What was your experience here...'
         name="comment"
         rows="5" cols="60"
-        onChange={editComment}>What was your experience here...</textarea>
+        onChange={editComment}></textarea>
     </div>
   )
 }

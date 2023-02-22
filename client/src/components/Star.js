@@ -7,7 +7,7 @@ const Star = (props) => {
 
 
     return (
-        <label className="star">
+        <label className="star" style={{cursor:"default"}}>
             <svg 
                 width="58" 
                 height="58" 
