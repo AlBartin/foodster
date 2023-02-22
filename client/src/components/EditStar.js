@@ -5,9 +5,24 @@ import { currentUserState } from "../recoil/atoms";
 
 const Star = (props) => {
 
+    const currentUser = useRecoilValue(currentUserState)
+    const id = props.favorite.id
+
+
+    const changeGrade = (e) => {
+        props.changeGradeIndex(e.target.value)
+    }
 
     return (
         <label className="star">
+            <input
+                type="radio"
+                name="rating"
+                id={props.grade}
+                value={props.index}
+                className="stars_radio-input"
+                onClick={changeGrade}
+            />
             <svg 
                 width="58" 
                 height="58" 
