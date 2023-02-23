@@ -6,10 +6,14 @@ from pydantic.types import conint
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    username: str
+    avatar: Optional[str]
 
 class UserOut(BaseModel):
     id: int
     email: EmailStr
+    username: str
+    avatar: Optional[str]
     created_at: datetime
 
     class Config:

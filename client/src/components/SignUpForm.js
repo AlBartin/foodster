@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { currentUserState } from '../recoil/atoms'
 import api from '../api/posts'
+import axios from 'axios'
 
 function SignUpForm() {
    
@@ -10,23 +11,63 @@ function SignUpForm() {
     const userRef = useRef()
     const errRef = useRef()
     const [signUpForm, setSignUpForm] = useState('')
+    const [imageSrc, setImageSrc] = useState('')
+    const [avatarImage, setAvatarImage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
 
-    const handleChange = (e) => setSignUpForm ({...signUpForm, [e.target.name]: e.target.value})
+    
 
-    const handleSubmit = async (e) => {
+    const handleFormChange = (e) => setSignUpForm ({...signUpForm, [e.target.name]: e.target.value})
+    
+    const handleImageChange = (e) => {
+        const reader = new FileReader()
+
+            reader.onload = function(onLoadEvent) {
+            setImageSrc(onLoadEvent.target.result)
+        }
+
+        reader.readAsDataURL(e.target.files[0])
+    }
+
+    const handleImageSubmit = (imageSrc) => {
+        const formData = new FormData()
+        formData.append("file", imageSrc)
+        formData.append("upload_preset", "ppjkc2zh")
+
+        console.log(imageSrc)
+        try {
+            axios.post("https://api.cloudinary.com/v1_1/chenkhov/image/upload", formData)
+            .then(resp =>{
+                setAvatarImage(resp.data.public_id)
+                setSignUpForm({...signUpForm, ["avatar"]: avatarImage})
+                debugger
+            })
+                
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault()
+
         if (signUpForm.password != signUpForm.confirmPassword) {
             alert("passwords don't match")
         }
         else {
+  
         try{
-            const response = await api.post('users',{
+            handleImageSubmit(imageSrc)
+            debugger
+            const response = api.post('users',{
                 email: signUpForm.email,
-                password: signUpForm.password
+                password: signUpForm.password,
+                username: signUpForm.username,
+                avatar: signUpForm.avatar
             })
-            console.log(signUpForm)
+            debugger
         setCurrentUser(response.data)
         navigate('/profile', { replace: true })
         }
@@ -54,37 +95,44 @@ return (
                 type='text'
                 name='email'
                 value={signUpForm.email}
-                onChange={handleChange}
+                onChange={handleFormChange}
             />
             <label>Password</label>
             <input
                 type='password'
                 name='password'
                 value={signUpForm.password}
-                onChange={handleChange}
+                onChange={handleFormChange}
             />
             <label>Confirm Password</label>
             <input
                 type='password'
                 name='confirmPassword'
                 value={signUpForm.confirmPassword}
-                onChange={handleChange}
+                onChange={handleFormChange}
             />
-            {/* <label>First Name</label>
+            <label>Username</label>
             <input
                 type='text'
-                name='name'
-                value={loginForm.firstname}
-                onChange={handleChange}
+                name='username'
+                value={signUpForm.username}
+                onChange={handleFormChange}
             />
-            <label>Last Name</label>
+            <label>Upload Profile Picture</label>
             <input
-                type='text'
-                name='lastname'
-                value={loginForm.lastname}
-                onChange={handleChange}
-            /> */}
-            <button>Sign Up</button>
+                type='file'
+                name='avatar'
+                value={signUpForm.avatar}
+                onChange={handleImageChange}
+            />
+            {imageSrc?
+            <div>
+            <img src={imageSrc} style={{width:'250px'}}/>
+            <button type='button' onClick={()=>{handleImageSubmit(imageSrc)}}>Upload Image</button>
+            </div>
+            :
+            null }
+            <button type='submit'>Sign Up</button>
     </form></div>
   )
 }
