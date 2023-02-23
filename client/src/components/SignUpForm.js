@@ -12,7 +12,7 @@ function SignUpForm() {
     const errRef = useRef()
     const [signUpForm, setSignUpForm] = useState('')
     const [imageSrc, setImageSrc] = useState('')
-    const [avatarImage, setAvatarImage] = useState('')
+    const [avatarImage, setAvatarImage] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
     const [currentUser, setCurrentUser] = useRecoilState(currentUserState)
 
@@ -30,46 +30,43 @@ function SignUpForm() {
         reader.readAsDataURL(e.target.files[0])
     }
 
-    const handleImageSubmit = (imageSrc) => {
+    const handleImageSubmit = async (e) => {
+        e.preventDefault()
         const formData = new FormData()
         formData.append("file", imageSrc)
         formData.append("upload_preset", "ppjkc2zh")
 
         console.log(imageSrc)
         try {
-            axios.post("https://api.cloudinary.com/v1_1/chenkhov/image/upload", formData)
-            .then(resp =>{
-                setAvatarImage(resp.data.public_id)
-                setSignUpForm({...signUpForm, ["avatar"]: avatarImage})
-                debugger
-            })
-                
-        }
+            const response = await axios.post("https://api.cloudinary.com/v1_1/chenkhov/image/upload", formData)
+            setAvatarImage(response.data.public_id)
+            }
         catch(error) {
             console.log(error)
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    useEffect(() => {
+        if (avatarImage) {
+        handleSubmit()
+        }
+    }, [avatarImage])
 
+    const handleSubmit = () => {
         if (signUpForm.password != signUpForm.confirmPassword) {
             alert("passwords don't match")
         }
         else {
   
         try{
-            handleImageSubmit(imageSrc)
-            debugger
             const response = api.post('users',{
                 email: signUpForm.email,
                 password: signUpForm.password,
                 username: signUpForm.username,
-                avatar: signUpForm.avatar
+                avatar: avatarImage
             })
-            debugger
-        setCurrentUser(response.data)
-        navigate('/profile', { replace: true })
+            setCurrentUser(response.data)
+            navigate('/profile', { replace: true })
         }
         catch (err) {
             if (!err?.response) {
@@ -89,7 +86,7 @@ function SignUpForm() {
 return (    
     <div>        
         <h1> Sign Up </h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleImageSubmit}>
             <label>Email</label>
             <input
                 type='text'
@@ -128,11 +125,11 @@ return (
             {imageSrc?
             <div>
             <img src={imageSrc} style={{width:'250px'}}/>
-            <button type='button' onClick={()=>{handleImageSubmit(imageSrc)}}>Upload Image</button>
+            <button type='submit' onClick={()=>{handleImageSubmit(imageSrc)}}>Sign Up</button>
             </div>
             :
-            null }
-            <button type='submit'>Sign Up</button>
+            <button type='submit' onClick={handleSubmit}>Sign Up</button>}
+            
     </form></div>
   )
 }
