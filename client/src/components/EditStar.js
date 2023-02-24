@@ -4,10 +4,8 @@ import { useRecoilValue } from "recoil";
 import { currentUserState } from "../recoil/atoms";
 
 const Star = (props) => {
-
-    const currentUser = useRecoilValue(currentUserState)
-    const id = props.favorite.id
-
+    // const currentUser = useRecoilValue(currentUserState)
+    // const id = props.favorite.id
 
     const changeGrade = (e) => {
         props.changeGradeIndex(e.target.value)

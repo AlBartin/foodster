@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { currentUserState } from "../recoil/atoms";
 import FavoriteCard from "../components/FavoriteCard.js";
+import BusinessDetail from "../components/BusinessDetail";
 import api from "../api/posts";
 
 function Favorites() {
@@ -9,12 +10,13 @@ function Favorites() {
     const [random, setRandom] = useState(null)
 	const [favorites, setFavorites] = useState([]);
 	const [priceFilter, setPriceFilter] = useState();
-	const [sortedFavs, setSortedFavs] = useState(favorites)
+	const [popUp, setPopUp] = useState(false)
+	const [businessId, setBusinessId] = useState()
 
 	useEffect(() => {
 		getFavorites();
 	}, []);
-
+ 
 	const getFavorites = async () => {
 		try {
 			const response = await api.get("favorites", {
@@ -36,17 +38,16 @@ function Favorites() {
 		}
 	}
 
-	
     const handleClick = () => {
         const randNum = Math.floor(Math.random() * favorites.length);
         setRandom(favorites[randNum])
     }
-
     const handleBack = () => {
         setRandom(null)
     }
-
-
+	const handleChange = (e) => {
+		setPriceFilter(e.target.value);
+	};
 	const getFilteredList = () => {
 		if (!priceFilter) {
 			return favorites;
@@ -55,12 +56,12 @@ function Favorites() {
 	};
 
 	const filteredList = useMemo(getFilteredList, [priceFilter, favorites]);
-	const handleChange = (e) => {
-		setPriceFilter(e.target.value);
-	};
-
+	const togglePopUp = (id) => {
+		setPopUp(!popUp)
+		setBusinessId(id)
+}
 	const renderedFavorites = filteredList.map((favorite) => (
-		<FavoriteCard key={favorite.id} favorite={favorite} deleteFavorite = {deleteFavorite} />
+		<FavoriteCard key={favorite.id} favorite={favorite} deleteFavorite = {deleteFavorite} togglePopUp={togglePopUp} />
 	));
 
 	const compare = (a, b, ascendingOrder) => {
@@ -91,34 +92,45 @@ function Favorites() {
 		  setFavorites([...current])
 		}
 	  }
-
+	  
 
 	return (
 		<div>
-			<h1>Favorite Businesses</h1>
-			<label> 
-			Sort By:
-			<select onChange={(e) => handleSort(e.target.value)}>
-				<option value="none">Default</option>
-				<option value="ascending">Alphabetically, A-Z</option>
-				<option value="descending">Alphabetically, Z-A</option>
-				{/* <option value="high">Low to high</option>
-				<option value="low">High to low</option> */}
-			</select>
-			</label>
-			<label>
-				Filter By Price:
-				<select value={priceFilter} onChange={handleChange}>
-					<option value="$">$</option>
-					<option value="$$">$$</option>
-					<option value="$$$">$$$</option>
-					<option value={""}>all</option>
-				</select>
-			</label>
-            <button onClick={handleClick}>Random Business</button>
-            <button onClick={handleBack}>Back</button>
-			{random ? <FavoriteCard key={random.id} favorite={random} /> : renderedFavorites }
-
+			{popUp ? (<BusinessDetail togglePopUp={togglePopUp} id={businessId}/>) : (
+				<div>
+					<h1>Favorite Businesses</h1>
+					<label>
+						Sort By:
+						<select onChange={(e) => handleSort(e.target.value)}>
+							<option value="none">Default</option>
+							<option value="ascending">Alphabetically, A-Z</option>
+							<option value="descending">Alphabetically, Z-A</option>
+							{/* <option value="high">Low to high</option>
+								<option value="low">High to low</option> */}
+						</select>
+					</label>
+					<label>
+						Filter By Price:
+						<select value={priceFilter} onChange={handleChange}>
+							<option value="$">$</option>
+							<option value="$$">$$</option>
+							<option value="$$$">$$$</option>
+							<option value={""}>all</option>
+						</select>
+					</label>
+					<button onClick={handleClick}>Random Business</button>
+					<button onClick={handleBack}>Back</button>
+					{random ? (
+						<FavoriteCard
+							key={random.id}
+							favorite={random}
+							deleteFavorite={deleteFavorite}
+							togglePopUp={togglePopUp}
+						/>
+					) : (renderedFavorites)
+					}
+				</div>
+			)}
 		</div>
 	);
 }

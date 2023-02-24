@@ -1,41 +1,37 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import BusinessDetail from "./BusinessDetail";
 import Rating from "./Rating";
 import Star from "./Star";
 
-function FavoriteCard({ favorite, deleteFavorite }) {
-	const [popUp, setPopUp] = useState(false);
+function FavoriteCard({ favorite, deleteFavorite, togglePopUp }) {
+	const {id, name, image_url, location_city, location_state, rating, price, comment, business_id}=favorite
 	const [ratingShow, setRatingShow] = useState(false);
 	const GRADES = ["Poor", "Fair", "Good", "Very good", "Excellent"];
-	const gradeIndex = favorite.rating;
+	const gradeIndex = rating;
 	const activeStar = {
 		fill: "yellow",
 	};
 
-	const handleDelete = () => {
-		deleteFavorite(favorite.id)
-	};
+	const handleDelete = () => deleteFavorite(id)
 	const handleRatingShow = () => setRatingShow(!ratingShow);
-
-  const handleClick = () => {
-    setPopUp(!popUp)
-  }
+  	const handlePopUp = () => togglePopUp(business_id)
 
 	return (
-		<div onClick={handleClick}>
-			<h3>{favorite.name}</h3>
-			<img src={favorite.image_url} alt={favorite.name} />
-			<h4>{favorite.price}</h4>
+		<div >
+			<h3>{name}</h3>
+			{/* placed it on img to not interfere with other buttons */}
+			<img onClick={handlePopUp} src={image_url} alt={name} />
+			<h4>{price}</h4>
 			<h4>
-				{favorite.location_city},{favorite.location_state}
+				{location_city},{location_state}
 			</h4>
-			{favorite.rating ? (
+			{rating ? (
 				<div>
 					<div className="stars">
 						{GRADES.map((grade, index) => (
 							<Star
-								rating={favorite.rating}
+								key={grade}
+								rating={rating}
 								style={
 									gradeIndex != null && gradeIndex >= index
 										? activeStar
@@ -44,16 +40,14 @@ function FavoriteCard({ favorite, deleteFavorite }) {
 							/>
 						))}
 					</div>
-					<h4>Comment: {favorite.comment}</h4>
+					<h4>Comment: {comment}</h4>
 					<button onClick={handleRatingShow}>
 						{ratingShow ? "Close" : "Edit Rating"}
 					</button>
 				</div>
 			) : (
 				<div>
-					<button onClick={handleRatingShow}>
-						{ratingShow ? "Close" : "Add Rating"}
-					</button>
+					<button onClick={handleRatingShow}>{ratingShow ? "Close" : "Add Rating"}</button>
 				</div>
 			)}
 			{ratingShow ? <h4>Rating: {<Rating favorite={favorite} />}</h4> : null}

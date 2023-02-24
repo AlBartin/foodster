@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil'
 import { businessesState } from '../recoil/atoms'
 import { useEffect } from 'react'
 import BusinessCard from '../components/BusinessCard.js'
-
+ 
 
 
 function BusinessContainer() {
@@ -33,7 +33,6 @@ function BusinessContainer() {
         }
 
     useEffect(() => {
-    
         getBusinesses();
     }, [])
 
