@@ -1,12 +1,10 @@
-import { useEffect, useState, useRef } from 'react'
-
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useState } from 'react'
+import { useRecoilValue } from 'recoil'
 import { currentUserState } from '../recoil/atoms'
 import Logout from '../components/Logout'
 import api from '../api/posts'
 
 function Profile() {
-  
     const [postForm, setPostForm] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const currentUser = useRecoilValue(currentUserState)
