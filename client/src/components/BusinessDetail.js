@@ -1,25 +1,29 @@
-import api from '../api/posts.js'
-import { useEffect } from 'react'
+import { detailPopUpState, detailBusinessState, detailLocationState } from "../recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useState } from "react";
 
-function BusinessDetail({ togglePopUp, id}) {
+function BusinessDetail({ business }) {
+	const [popUp, setPopUp] = useRecoilState(detailPopUpState);
+	const location = useRecoilValue(detailLocationState)
 
-	const getBusiness = async () => {
-		try {
-			const response = await api.get(`businesses/${id}`, {
-				params: { id: id },
-			});
-			console.log(response.data);
-		} catch (error) {
-			console.log(error);
+	const handlePopUp = () => {
+		setPopUp(!popUp)
+	}
+	console.log(location)
+	return (
+		<div >
+			{ business == null ?
+			<h1>loading...</h1> :
+			<div>
+			<h1 onClick={handlePopUp}>{business.name}</h1> 
+			<p>{location[0]}</p>
+			<p>{location[1]}</p>
+			{/* <img src={business.photos[0]} /> */}
+
+			</div>
 		}
-	};
-	useEffect(() => {
-		getBusiness();
-	}, []);
-  
-	const handlePopUp = () => togglePopUp();
-
-	return <div onClick={handlePopUp}>BusinessDetail</div>;
+		</div>
+	);
 }
 
 export default BusinessDetail;

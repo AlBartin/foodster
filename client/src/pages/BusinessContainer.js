@@ -35,10 +35,6 @@ function BusinessContainer() {
     useEffect(() => {
         getBusinesses();
     }, [])
-
-
-    const businessCategories = 'Chinese,Mexican,Italian,American, Sandwiches'
-    console.log(businessCategories.split(','))
     
 
     const renderedBusinesses = businesses.map((business) => <BusinessCard key={business.id} business={business} />)
